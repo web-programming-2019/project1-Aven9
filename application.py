@@ -20,7 +20,6 @@ Session(app)
 engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
-
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -37,7 +36,7 @@ def login():
                            }).fetchone
         if valid is None:
             return "User does not exist or password is wrong"
-        return render_template("main.html")
+        return render_template("search.html", username=username)
 
     return render_template("login.html")
 
@@ -57,3 +56,45 @@ def signup():
         print(f"username:{username}, password{password}")
         return render_template("login.html")
     return render_template("signup.html")
+
+
+@app.route('/search<string:username>', methods=["GET", "POST"])
+def search(username):
+    if request.method == 'GET':
+        return render_template("search.html", username=username)
+    hints = request.form.get("hints")
+
+    res = db.execute("SELECT * FROM books WHERE (isbn LIKE :hints OR title LIKE :hints OR author LIKE :hints)",
+                     {
+                        "hints": "%"+hints+"%"
+                     }).fetchall()
+    db.commit()
+    return render_template("search.html", res=res, username=username)
+
+
+@app.route('/detail/<string:isbn>/<string:username>', methods=["GET", "POST"])
+def detail(isbn, username):
+    if request.method == 'POST' and request.form.get('rank'):
+        db.execute("DROP TABLE IF EXISTS review;")
+        db.execute(
+            "CREATE TABLE IF NOT EXISTS review(id SERIAL PRIMARY KEY , isbn VARCHAR REFERENCES books(isbn), username VARCHAR REFERENCES users(username), rank DECIMAL CHECK ( rank>=1 AND rank<=5 ), content VARCHAR );")
+        db.execute("INSERT INTO review VALUE (:isbn, :username, :rank, :content)", {
+            "isbn": isbn,
+            "username": username,
+            "rank": request.form.get('rank'),
+            "content": request.form.get('content')
+        })
+        db.commit()
+    db.execute(
+        "CREATE TABLE IF NOT EXISTS review(id SERIAL PRIMARY KEY , isbn VARCHAR REFERENCES books(isbn), username VARCHAR REFERENCES users(username), rank DECIMAL CHECK ( rank>=1 AND rank<=5 ), content VARCHAR );")
+    comments = db.execute("SELECT rank, content, review.username FROM review JOIN users ON review.isbn = :isbn", {
+        "isbn": isbn
+    }).fetchall()
+
+    bookinfo = db.execute("SELECT title, author, pubyear FROM books WHERE isbn = :isbn", {
+        "isbn": isbn
+    }).fetchone()
+    db.commit()
+    return render_template("detail.html", comments=comments, bookinfo=bookinfo, username=username)
+
+

@@ -9,7 +9,7 @@ db = scoped_session(sessionmaker(bind=engine))
 
 
 def main():
-    db.execute("DROP TABLE IF EXISTS books;")
+    # db.execute("DROP TABLE IF EXISTS books;")
     db.execute("CREATE TABLE IF NOT EXISTS books "
                "(isbn VARCHAR PRIMARY KEY , title VARCHAR NOT NULL , author VARCHAR NOT NULL , pubyear INT);")
     f = open("books.csv")
