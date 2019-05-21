@@ -75,10 +75,7 @@ def search(username):
 @app.route('/detail/<string:isbn>/<string:username>', methods=["GET", "POST"])
 def detail(isbn, username):
     if request.method == 'POST' and request.form.get('rank'):
-        db.execute("DROP TABLE IF EXISTS review;")
-        db.execute(
-            "CREATE TABLE IF NOT EXISTS review(id SERIAL PRIMARY KEY , isbn VARCHAR REFERENCES books(isbn), username VARCHAR REFERENCES users(username), rank DECIMAL CHECK ( rank>=1 AND rank<=5 ), content VARCHAR );")
-        db.execute("INSERT INTO review VALUE (:isbn, :username, :rank, :content)", {
+        db.execute("INSERT INTO review (isbn, username, rank, content) VALUES (:isbn, :username, :rank, :content)", {
             "isbn": isbn,
             "username": username,
             "rank": request.form.get('rank'),
@@ -87,14 +84,13 @@ def detail(isbn, username):
         db.commit()
     db.execute(
         "CREATE TABLE IF NOT EXISTS review(id SERIAL PRIMARY KEY , isbn VARCHAR REFERENCES books(isbn), username VARCHAR REFERENCES users(username), rank DECIMAL CHECK ( rank>=1 AND rank<=5 ), content VARCHAR );")
-    comments = db.execute("SELECT rank, content, review.username FROM review JOIN users ON review.isbn = :isbn", {
+    comments = db.execute("SELECT rank, content, username FROM review WHERE isbn = :isbn", {
         "isbn": isbn
     }).fetchall()
-
+    print(comments.count)
     bookinfo = db.execute("SELECT title, author, pubyear FROM books WHERE isbn = :isbn", {
         "isbn": isbn
     }).fetchone()
-    db.commit()
-    return render_template("detail.html", comments=comments, bookinfo=bookinfo, username=username)
+    return render_template("detail.html", comments=comments, bookinfo=bookinfo, username=username, isbn=isbn)
 
 

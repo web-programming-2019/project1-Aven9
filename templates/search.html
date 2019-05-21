@@ -9,7 +9,7 @@
 <body class="container" >
     <h1>Welcome to Bookhome!</h1>
     <!--need a nice search form-->
-    <form action="{{ url_for('search') }}" method="post">
+    <form action="{{ url_for('search', username=username) }}" method="post">
         <input class="form-control" type="text" name="hints" placeholder="Search books with isbn, name or author">
         <button type="submit" class="btn btn-primary">Search</button>
     </form>

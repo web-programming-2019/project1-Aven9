@@ -21,13 +21,8 @@
             </div>
           </div>
     </div>
-    {% for comment in comments %}
-        <p>show some commit</p>
-    {% else %}
-        <p>No comments yet.</p>
-    {% endfor %}
 
-    <form action="{{ url_for('detail') }}" method="post">
+    <form action="{{ url_for('detail', isbn=isbn, username=username) }}" method="post">
       <div class="form-group">
         <label for="exampleFormControlSelect1">Comment Rank:</label>
         <select class="form-control" id="exampleFormControlSelect1" name="rank">
@@ -42,8 +37,16 @@
         <label for="exampleFormControlTextarea1">Write comment:</label>
         <textarea class="form-control" id="exampleFormControlTextarea1" name="content" rows="3"></textarea>
       </div>
-        <button></button>
+        <button>commit</button>
     </form>
+
+    {% for comment in comments %}
+        <p>
+            Rank: {{ comment.rank }}    {{ comment.content }}   -- by {{ comment.username }}
+        </p>
+    {% else %}
+        <p>No comments yet.</p>
+    {% endfor %}
 
 </body>
 </html>
