@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Detail</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body class="container">
+    <div class="row">
+          <div class="col-sm-12">
+            <div class="card">
+              <div class="row card-body">
+                   <img src="{{ url_for('static', filename='img/Book.jpg') }}" class="col-sm-6 col-lg-4" alt="">
+                  <div class="col-sm-6 col-lg-8">
+                      <h5 class="card-title">《{{ bookinfo.title }}》</h5>
+                      <p class="card-text">Author: {{ bookinfo.author }}</p>
+                      <p class="card-text">Publish Year: {{ bookinfo.pubyear }}</p>
+                      <p class="card-text">IDBN: {{ isbn }}</p>
+                  </div>
+              </div>
+            </div>
+          </div>
+    </div>
+
+    <form action="{{ url_for('detail', isbn=isbn, username=username) }}" method="post">
+      <div class="form-group">
+        <label for="exampleFormControlSelect1">Comment Rank:</label>
+        <select class="form-control" id="exampleFormControlSelect1" name="rank">
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="exampleFormControlTextarea1">Write comment:</label>
+        <textarea class="form-control" id="exampleFormControlTextarea1" name="content" rows="3"></textarea>
+      </div>
+        <button>commit</button>
+    </form>
+
+    {% for comment in comments %}
+        <p>
+            Rank: {{ comment.rank }}    {{ comment.content }}   -- by {{ comment.username }}
+        </p>
+    {% else %}
+        <p>No comments yet.</p>
+    {% endfor %}
+
+</body>
+</html>

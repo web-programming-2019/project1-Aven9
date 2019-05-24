@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BookHome</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+</head>
+<body class="container" >
+    <h1>Welcome to Bookhome!</h1>
+    <!--need a nice search form-->
+    <form action="{{ url_for('search', username=username) }}" method="post">
+        <input class="form-control" type="text" name="hints" placeholder="Search books with isbn, name or author">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+    {% for item in res %}
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="card">
+              <div class="row card-body">
+                   <img src="{{ url_for('static', filename='img/Book.jpg') }}" class="col-sm-6 col-lg-4" alt="">
+                  <div class="col-sm-6 col-lg-8">
+                      <h5 class="card-title">《{{ item.title }}》</h5>
+                      <p class="card-text">Author: {{ item.author }}</p>
+                      <p class="card-text">Publish Year: {{ item.pubyear }}</p>
+                      <p class="card-text">IDBN: {{ item.isbn }}</p>
+                      <a href="{{ url_for('detail', isbn=item.isbn, username=username) }}" class="btn btn-primary">Go detail</a>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    {% else %}
+        <h2>No result for search.</h2>
+    {% endfor %}
+    
+</body>
+</html>
