@@ -1,11 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Detail</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-</head>
-<body class="container">
+{% extends "template2.html" %}
+
+{% block title %}
+    Detail Page
+{% endblock %}
+
+{% block user %}
+{{ username }}
+{% endblock %}
+
+{% block content %}
+    {% set users = [] %}
+    {% for comment in comments %}
+        {% set _ = users.append(comment.username) %}
+    {% endfor %}
+    <p>{{ bookinfo }}</p>
     <div class="row">
           <div class="col-sm-12">
             <div class="card">
@@ -16,12 +24,15 @@
                       <p class="card-text">Author: {{ bookinfo.author }}</p>
                       <p class="card-text">Publish Year: {{ bookinfo.pubyear }}</p>
                       <p class="card-text">IDBN: {{ isbn }}</p>
+                      <h5 class="card-text">Average Rating : {{ average_rating }}</h5>
+                      <p class="card-text">Work Ratings Count: {{ work_ratings_count }}</p>
                   </div>
               </div>
             </div>
           </div>
     </div>
 
+    {% if username not in users %}
     <form action="{{ url_for('detail', isbn=isbn, username=username) }}" method="post">
       <div class="form-group">
         <label for="exampleFormControlSelect1">Comment Rank:</label>
@@ -37,16 +48,15 @@
         <label for="exampleFormControlTextarea1">Write comment:</label>
         <textarea class="form-control" id="exampleFormControlTextarea1" name="content" rows="3"></textarea>
       </div>
-        <button>commit</button>
+        <button class="btn btn-primary">Submit</button>
     </form>
+    {% endif %}
 
     {% for comment in comments %}
         <p>
             Rank: {{ comment.rank }}    {{ comment.content }}   -- by {{ comment.username }}
         </p>
     {% else %}
-        <p>No comments yet.</p>
+        <h5 style="padding-top: 10px">No comments yet.</h5>
     {% endfor %}
-
-</body>
-</html>
+{% endblock %}

@@ -1,21 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>BookHome</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+{% extends "template2.html" %}
 
-</head>
-<body class="container" >
+{% block title %}
+    BookHome
+{% endblock %}
+
+{% block heading %}
     <h1>Welcome to Bookhome!</h1>
-    <!--need a nice search form-->
-    <form action="{{ url_for('search', username=username) }}" method="post">
-        <input class="form-control" type="text" name="hints" placeholder="Search books with isbn, name or author">
-        <button type="submit" class="btn btn-primary">Search</button>
+{% endblock %}
+
+{% block user %}
+{{ username }}
+{% endblock %}
+
+{% block content %}
+    <form style="padding-bottom: 10px" class="d-flex justify-content-between" action="{{ url_for('search', username=username) }}" method="post">
+            <input class="form-control" type="text" name="hints" placeholder="Search books with isbn, name or author">
+            <button style="padding-left: 10px" type="submit" class="btn btn-primary">Search</button>
     </form>
     {% for item in res %}
         <div class="row">
-          <div class="col-sm-12">
+          <div class="col-sm-12" style="padding-bottom: 10px">
             <div class="card">
               <div class="row card-body">
                    <img src="{{ url_for('static', filename='img/Book.jpg') }}" class="col-sm-6 col-lg-4" alt="">
@@ -31,8 +35,6 @@
           </div>
         </div>
     {% else %}
-        <h2>No result for search.</h2>
+        <h5 style="padding-top: 10px">No result for search.</h5>
     {% endfor %}
-    
-</body>
-</html>
+{% endblock %}

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+</head>
+<body class="container" >
+    <div class="ml-auto " style="padding-top:10px; padding-bottom: 10px">
+        <button type="button" class="btn btn-outline-info">{% block user %}{% endblock %}</button>
+        <a class="btn btn-primary" href="{{ url_for('login') }}" role="button" >Logout</a>
+    </div>
+    {% block heading %}{% endblock %}
+    {% block content %}{% endblock %}
+
+</body>
